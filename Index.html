@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookmark Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-hover);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+        .category-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-hover);
+            transition: transform 0.2s ease;
+        }
+
+        .category-section:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-title {
+            font-size: 1.8em;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-item:hover {
+            background: var(--hover-bg);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-hover);
+            transform: translateX(5px);
+        }
+
+        .link-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            margin-right: 12px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .link-item:hover .link-icon {
+            transform: scale(1.1);
+        }
+
+        .link-text {
+            font-size: 0.95em;
+            font-weight: 500;
+            word-break: break-word;
+            flex: 1;
+        }
+
+        .link-arrow {
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            color: var(--primary-color);
+        }
+
+        .link-item:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* Loading skeleton */
+        .link-icon.loading {
+            background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .category-title {
+                font-size: 1.5em;
+            }
+
+            .links-container {
+                grid-template-columns: 1fr;
+            }
+
+            .category-section {
+                padding: 20px;
+            }
+        }
+
+        /* Performance optimization: will-change for animated elements */
+        .link-item, .link-icon {
+            will-change: transform;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: white;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔖 My Bookmark Hub</h1>
+            <p class="subtitle">Quick access to your favorite websites</p>
+        </header>
+
+        <main id="bookmarks-container">
+            <!-- Categories will be dynamically generated here -->
+        </main>
+
+        <footer>
+            <p>Bookmark Hub © 2025 | Optimized for Speed & Performance</p>
+        </footer>
+    </div>
+
+    <script>
+        // Categories and URLs data structure
+        const bookmarksData = [
+            {
+                category: "Alliance University",
+                urls: [
+                    "https://student.alliance.edu.in/auerp/StudentApplicationDocumentUpload.do?method=initStudentApplicationDocumentUploadFirst",
+                    "https://alliance.blackboard.com/",
+                    "https://lcs.alliance.edu.in/lcs/login/#/home",
+                    "https://admin.elibrary.in.pearson.com/sso/login?service=https%3A//ebooks.elibrary.in.pearson.com/wr/index.html&eulogin=true",
+                    "https://www.fluxella.in/"
+                ]
+            },
+            {
+                category: "Aquarium Keeping",
+                urls: [
+                    "https://somethingfishy.co.in/",
+                    "https://sreepadma.com/",
+                    "https://www.bangaloreaquarium.com/",
+                    "https://www.aquazones.in/",
+                    "https://www.bunnycart.com/",
+                    "https://himadriaquatics.com/",
+                    "https://fish.splashyfin.com/",
+                    "https://www.best4pets.in/",
+                    "https://www.deeshrimpsindia.in/?source=pwa",
+                    "https://www.ohmletshoppe.com/?source=pwa",
+                    "https://fishandflow.com/",
+                    "https://aquariumhobby.in/",
+                    "https://www.petzlifeworld.in/",
+                    "https://gurucharansavanth.github.io/Seachem-Dosing-Calculator/"
+                ]
+            },
+            {
+                category: "Movies",
+                urls: [
+                    "https://movieswatch.store/goku/"
+                ]
+            }
+        ];
+
+        // Cache management for favicons
+        const CACHE_KEY_PREFIX = 'favicon_cache_';
+        const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+
+        // Get cached favicon URL
+        function getCachedFavicon(url) {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY_PREFIX + url);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (Date.now() - data.timestamp < CACHE_EXPIRY) {
+                        return data.faviconUrl;
+                    } else {
+                        localStorage.removeItem(CACHE_KEY_PREFIX + url);
+                    }
+                }
+            } catch (e) {
+                console.error('Cache read error:', e);
+            }
+            return null;
+        }
+
+        // Set cached favicon URL
+        function setCachedFavicon(url, faviconUrl) {
+            try {
+                const data = {
+                    faviconUrl: faviconUrl,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(CACHE_KEY_PREFIX + url, JSON.stringify(data));
+            } catch (e) {
+                console.error('Cache write error:', e);
+                // If localStorage is full, clear old entries
+                if (e.name === 'QuotaExceededError') {
+                    clearOldCache();
+                }
+            }
+        }
+
+        // Clear old cache entries
+        function clearOldCache() {
+            try {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.startsWith(CACHE_KEY_PREFIX)) {
+                        const cached = localStorage.getItem(key);
+                        if (cached) {
+                            const data = JSON.parse(cached);
+                            if (Date.now() - data.timestamp >= CACHE_EXPIRY) {
+                                localStorage.removeItem(key);
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error('Cache cleanup error:', e);
+            }
+        }
+
+        // Extract domain from URL
+        function getDomain(url) {
+            try {
+                const urlObj = new URL(url);
+                return urlObj.hostname;
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // Get favicon URL using Google's service
+        function getFaviconUrl(url) {
+            const domain = getDomain(url);
+            return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        }
+
+        // Create link element with lazy loading
+        function createLinkElement(url, index) {
+            const linkItem = document.createElement('a');
+            linkItem.href = url;
+            linkItem.className = 'link-item';
+            linkItem.target = '_blank';
+            linkItem.rel = 'noopener noreferrer'; // Security best practice
+            linkItem.dataset.url = url;
+
+            // Create icon
+            const icon = document.createElement('img');
+            icon.className = 'link-icon loading';
+            icon.alt = 'Site icon';
+            icon.dataset.lazyload = 'true';
+            
+            // Check cache first
+            const cachedFavicon = getCachedFavicon(url);
+            if (cachedFavicon) {
+                icon.src = cachedFavicon;
+                icon.classList.remove('loading');
+            } else {
+                icon.dataset.src = getFaviconUrl(url);
+            }
+
+            // Handle image load error
+            icon.onerror = function() {
+                // Fallback to a default icon
+                this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232563eb"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/%3E%3C/svg%3E';
+                this.classList.remove('loading');
+            };
+
+            icon.onload = function() {
+                this.classList.remove('loading');
+                if (!cachedFavicon && this.src !== this.dataset.src) {
+                    setCachedFavicon(url, this.src);
+                }
+            };
+
+            // Create text
+            const text = document.createElement('span');
+            text.className = 'link-text';
+            text.textContent = getDomain(url) || url;
+
+            // Create arrow
+            const arrow = document.createElement('span');
+            arrow.className = 'link-arrow';
+            arrow.textContent = '→';
+
+            linkItem.appendChild(icon);
+            linkItem.appendChild(text);
+            linkItem.appendChild(arrow);
+
+            return linkItem;
+        }
+
+        // Intersection Observer for lazy loading
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        delete img.dataset.src;
+                    }
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px' // Start loading 50px before entering viewport
+        });
+
+        // Render bookmarks
+        function renderBookmarks() {
+            const container = document.getElementById('bookmarks-container');
+            const fragment = document.createDocumentFragment(); // Use fragment for better performance
+
+            bookmarksData.forEach(categoryData => {
+                // Create category section
+                const section = document.createElement('section');
+                section.className = 'category-section';
+
+                // Create category title
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = categoryData.category;
+
+                // Create links container
+                const linksContainer = document.createElement('div');
+                linksContainer.className = 'links-container';
+
+                // Create links
+                categoryData.urls.forEach((url, index) => {
+                    const linkElement = createLinkElement(url, index);
+                    linksContainer.appendChild(linkElement);
+
+                    // Observe lazy loading for images
+                    const img = linkElement.querySelector('img[data-lazyload]');
+                    if (img && img.dataset.src) {
+                        imageObserver.observe(img);
+                    }
+                });
+
+                section.appendChild(title);
+                section.appendChild(linksContainer);
+                fragment.appendChild(section);
+            });
+
+            container.appendChild(fragment);
+        }
+
+        // Initialize on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderBookmarks);
+        } else {
+            renderBookmarks();
+        }
+
+        // Clear old cache on page load
+        clearOldCache();
+    </script>
+</body>
+</html>
